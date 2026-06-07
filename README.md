@@ -1,5 +1,13 @@
 # RapidResQ AI 🚨
 
+## Platform Preview
+
+<p align="center">
+  <img src="assets/mahakumbh.png" alt="RapidResQ Homepage" width="900">
+</p>
+
+---
+
 ### AI-Powered Emergency Response Coordination Platform for Ujjain Mahakumbh 2028
 
 RapidResQ AI is an intelligent emergency management platform designed for large-scale events such as Ujjain Mahakumbh 2028. The platform enables citizens to quickly report emergencies while helping authorities prioritize, coordinate, and respond efficiently using AI-powered workflows.
