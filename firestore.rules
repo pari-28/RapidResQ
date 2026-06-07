@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Global safety net (Default Deny Catch-all)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Core Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+    
+    // 1.5 Test Connection Rules
+    match /test/{testId} {
+      allow read: if true;
+    }
+
+    // 2. Users Collection Rules
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && userId == request.auth.uid;
+    }
+    
+    // 3. Reports Collection Rules
+    match /reports/{reportId} {
+      allow read: if true;
+      allow create: if isValidId(reportId)
+                    && incoming().id == reportId
+                    && incoming().reporterName is string && incoming().reporterName.size() <= 128
+                    && incoming().severity is string;
+      allow update: if isSignedIn();
+    }
+    
+    // 4. Notifications Rules
+    match /notifications/{notificationId} {
+      allow read: if true;
+      allow write: if isSignedIn() && isValidId(notificationId);
+    }
+
+    // 5. Police Reports Rules
+    match /police_reports/{policeReportId} {
+      allow read: if isSignedIn();
+      allow create: if true;
+      allow update, delete: if isSignedIn() && isValidId(policeReportId);
+    }
+
+    // 6. Medical Reports Rules
+    match /medical_reports/{medicalReportId} {
+      allow read: if isSignedIn();
+      allow create: if true;
+      allow update, delete: if isSignedIn() && isValidId(medicalReportId);
+    }
+
+    // 7. Fire Reports Rules
+    match /fire_reports/{fireReportId} {
+      allow read: if isSignedIn();
+      allow create: if true;
+      allow update, delete: if isSignedIn() && isValidId(fireReportId);
+    }
+
+    // 8. Assignments Rules
+    match /assignments/{assignmentId} {
+      allow read: if isSignedIn();
+      allow create: if true;
+      allow update, delete: if isSignedIn() && isValidId(assignmentId);
+    }
+  }
+}

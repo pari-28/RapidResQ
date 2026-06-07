@@ -1,0 +1,10 @@
+{
+  "name": "Remix: Remix: Mahakumbh 2028",
+  "description": "Your smart, elegant digital companion for a safe and spiritual journey during the Mahakumbh 2028.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

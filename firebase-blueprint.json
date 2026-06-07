@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents registered users or pilgrim/staff accounts.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Unique user ID matching Auth uid" },
+        "name": { "type": "string", "description": "Display name of the user" },
+        "email": { "type": "string", "description": "Email address of the user" },
+        "role": { "type": "string", "enum": ["pilgrim", "admin", "police", "medical", "fire"], "description": "System role of the user" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["userId", "name", "role", "createdAt"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "Represents a submitted emergency or safety incident report.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Incident ID" },
+        "reporterName": { "type": "string", "description": "Name of the person who reported it" },
+        "reporterPhone": { "type": "string", "description": "Mobile number of reporter" },
+        "category": { "type": "string", "description": "Category of emergency" },
+        "description": { "type": "string", "description": "Details of the incident" },
+        "originalLanguage": { "type": "string", "description": "Language used by reporter" },
+        "englishTranslation": { "type": "string", "description": "English translation for responders" },
+        "hindiTranslation": { "type": "string", "description": "Hindi translation for responders" },
+        "severity": { "type": "string", "description": "Original severity level" },
+        "priority": { "type": "string", "description": "Triage priority assigned by AI" },
+        "assignedTeam": { "type": "string", "description": "Team designated to resolve this incident" },
+        "latitude": { "type": "string", "description": "Geographical latitude" },
+        "longitude": { "type": "string", "description": "Geographical longitude" },
+        "timestamp": { "type": "string", "description": "Time the event was logged" },
+        "status": { "type": "string", "description": "Operational status" },
+        "imageUrl": { "type": "string", "description": "Optional attached evidence photograph URL" }
+      },
+      "required": ["id", "reporterName", "reporterPhone", "category", "description", "status", "timestamp"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "Represents real-time alert broadcasts or alerts pushed to safety queues.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique notification identifier" },
+        "title": { "type": "string", "description": "Title of safety notification" },
+        "category": { "type": "string", "description": "Category of alert like crowd or weather" },
+        "message": { "type": "string", "description": "Full notification message body" },
+        "severity": { "type": "string", "description": "Severity level of safety alert" },
+        "time": { "type": "string", "description": "Time of alert generation" }
+      },
+      "required": ["id", "title", "message", "severity", "time"]
+    },
+    "PoliceReport": {
+      "title": "PoliceReport",
+      "description": "Cross-reference specifically tracking police-related crowd or security incidents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Incident identification reference" },
+        "reportId": { "type": "string", "description": "Foreign key reference to main reports document" },
+        "syncedAt": { "type": "string", "description": "Verification syncing marker timestamp" }
+      },
+      "required": ["id", "reportId", "syncedAt"]
+    },
+    "MedicalReport": {
+      "title": "MedicalReport",
+      "description": "Cross-reference specifically tracking active medical emergency incidents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Incident identification reference" },
+        "reportId": { "type": "string", "description": "Foreign key reference to main reports document" },
+        "syncedAt": { "type": "string", "description": "Verification syncing marker timestamp" }
+      },
+      "required": ["id", "reportId", "syncedAt"]
+    },
+    "FireReport": {
+      "title": "FireReport",
+      "description": "Cross-reference specifically tracking active dry hazard or fire incidents.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Incident identification reference" },
+        "reportId": { "type": "string", "description": "Foreign key reference to main reports document" },
+        "syncedAt": { "type": "string", "description": "Verification syncing marker timestamp" }
+      },
+      "required": ["id", "reportId", "syncedAt"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Tracks emergency squad or responders assigned directly to an incident.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique assignment tracking ID" },
+        "reportId": { "type": "string", "description": "Incident ID reference" },
+        "assignedTeam": { "type": "string", "description": "Squad team title dispatched" },
+        "assignedAt": { "type": "string", "description": "Timestamp indicating dispatch moment" }
+      },
+      "required": ["id", "reportId", "assignedTeam", "assignedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "Collection tracking user accounts."
+    },
+    "reports/{reportId}": {
+      "schema": "Report",
+      "description": "Core collection storing reported incident updates."
+    },
+    "notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "Broadcasting push alert notices."
+    },
+    "police_reports/{policeReportId}": {
+      "schema": "PoliceReport",
+      "description": "Cross-references for Police dashboard queues."
+    },
+    "medical_reports/{medicalReportId}": {
+      "schema": "MedicalReport",
+      "description": "Cross-references for Medical dashboard queues."
+    },
+    "fire_reports/{fireReportId}": {
+      "schema": "FireReport",
+      "description": "Cross-references for Fire dashboard queues."
+    },
+    "assignments/{assignmentId}": {
+      "schema": "Assignment",
+      "description": "Responders teams assignments logger."
+    }
+  }
+}
